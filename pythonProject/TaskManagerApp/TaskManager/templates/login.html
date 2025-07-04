@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Enhanced Button Styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 160px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Icon styling */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-icon::after {
+    content: '→';
+    transition: transform 0.3s ease;
+}
+
+.btn-icon:hover::after {
+    transform: translateX(4px);
+}
+
+/* Ripple effect */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            opacity: 0.15;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 50% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { top: 5%; left: 10%; width: 20px; height: 20px; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 15%; right: 15%; width: 35px; height: 35px; animation-delay: 2s; }
+        .particle:nth-child(3) { top: 25%; left: 60%; width: 15px; height: 15px; animation-delay: 4s; }
+        .particle:nth-child(4) { top: 35%; right: 40%; width: 25px; height: 25px; animation-delay: 1s; }
+        .particle:nth-child(5) { top: 45%; left: 20%; width: 30px; height: 30px; animation-delay: 3s; }
+        .particle:nth-child(6) { top: 55%; right: 25%; width: 18px; height: 18px; animation-delay: 5s; }
+        .particle:nth-child(7) { top: 65%; left: 70%; width: 22px; height: 22px; animation-delay: 2.5s; }
+        .particle:nth-child(8) { top: 75%; right: 60%; width: 28px; height: 28px; animation-delay: 4.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            25% { transform: translateY(-30px) rotate(90deg); opacity: 0.8; }
+            50% { transform: translateY(-15px) rotate(180deg); opacity: 0.5; }
+            75% { transform: translateY(-45px) rotate(270deg); opacity: 0.9; }
+        }
+
+        .geometric-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .triangle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid rgba(255, 255, 255, 0.08);
+            animation: spin 15s linear infinite;
+        }
+
+        .triangle:nth-child(1) { top: 10%; left: 80%; animation-delay: 0s; }
+        .triangle:nth-child(2) { top: 40%; left: 5%; animation-delay: 5s; }
+        .triangle:nth-child(3) { top: 70%; left: 85%; animation-delay: 10s; }
+
+        .square {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.06);
+            animation: bounce 10s ease-in-out infinite;
+        }
+
+        .square:nth-child(4) { top: 20%; left: 90%; animation-delay: 2s; }
+        .square:nth-child(5) { top: 60%; left: 10%; animation-delay: 7s; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-40px) scale(1.2); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            position: relative;
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shimmer 8s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .main-title {
+            font-size: 5.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, 
+                #ff6b6b 0%, 
+                #4ecdc4 20%, 
+                #45b7d1 40%, 
+                #96ceb4 60%, 
+                #feca57 80%, 
+                #ff9ff3 100%
+            );
+            background-size: 300% 300%;
+            animation: rainbowFlow 4s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+            letter-spacing: -2px;
+        }
+
+        @keyframes rainbowFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .title-decorations {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        .spark:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .spark:nth-child(2) { top: 30%; right: 20%; animation-delay: 1s; }
+        .spark:nth-child(3) { top: 70%; left: 25%; animation-delay: 2s; }
+        .spark:nth-child(4) { top: 80%; right: 30%; animation-delay: 0.5s; }
+        .spark:nth-child(5) { top: 40%; left: 80%; animation-delay: 1.5s; }
+        .spark:nth-child(6) { top: 60%; right: 15%; animation-delay: 2.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+                opacity: 0.8;
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 40px rgba(78, 205, 196, 0.3);
+                opacity: 1;
+            }
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .badge:nth-child(1) { animation-delay: 0s; }
+        .badge:nth-child(2) { animation-delay: 1s; }
+        .badge:nth-child(3) { animation-delay: 2s; }
+        .badge:nth-child(4) { animation-delay: 3s; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .emoji-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: fall 8s linear infinite;
+            opacity: 0.6;
+        }
+
+        .emoji:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .emoji:nth-child(2) { left: 25%; animation-delay: 2s; }
+        .emoji:nth-child(3) { left: 40%; animation-delay: 4s; }
+        .emoji:nth-child(4) { left: 55%; animation-delay: 1s; }
+        .emoji:nth-child(5) { left: 70%; animation-delay: 3s; }
+        .emoji:nth-child(6) { left: 85%; animation-delay: 5s; }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(400px) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3.5rem;
+                letter-spacing: -1px;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+                letter-spacing: 2px;
+            }
+
+            .header-badges {
+                gap: 10px;
+            }
+
+            .badge {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
+            
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+                letter-spacing: 1px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="geometric-shapes">
+        <div class="triangle"></div>
+        <div class="triangle"></div>
+        <div class="triangle"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title-decorations">
+                <div class="spark"></div>
+                <div class="spark"></div>
+                <div class="spark"></div>
+                <div class="spark"></div>
+                <div class="spark"></div>
+                <div class="spark"></div>
+            </div>
+
+            <div class="emoji-rain">
+                <div class="emoji">📝</div>
+                <div class="emoji">✨</div>
+                <div class="emoji">🚀</div>
+                <div class="emoji">⚡</div>
+                <div class="emoji">🎯</div>
+                <div class="emoji">💫</div>
+            </div>
+
+            <h1 class="main-title">TASK LIST</h1>
+            <p class="subtitle">Ultimate Productivity Hub</p>
+            <p class="tagline">"Transform chaos into clarity, one task at a time"</p>
+            
+            <div class="header-badges">
+                <span class="badge">🔥 Pro Edition</span>
+                <span class="badge">⚡ Lightning Fast</span>
+                <span class="badge">📊 Analytics Ready</span>
+                <span class="badge">🎨 Beautiful UI</span>
+                <a class="btn btn-primary btn-icon" href="task_page" role="button">Start List</a>            </div>
+        </div>
+    </div>
+</body>
+</html>
