@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Sign In or Create Account</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .auth-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-subtitle {
+            color: #718096;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .form-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #718096;
+        }
+
+        .form-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-content {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-content.slide-left {
+            transform: translateX(-100%);
+        }
+
+        .auth-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover {
+            border-color: #cbd5e0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 24px;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .success-message {
+            color: #38a169;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            right: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .auth-title {
+                font-size: 24px;
+            }
+
+            .form-input {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            .submit-btn {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1 class="auth-title">Welcome</h1>
+            <p class="auth-subtitle">Sign in to your account or create a new one</p>
+        </div>
+
+        <div class="form-tabs">
+            <div class="form-tab active" onclick="switchTab('signin')">Sign In</div>
+            <div class="form-tab" onclick="switchTab('signup')">Sign Up</div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-content" id="form-content">
+                <!-- Sign In Form -->
+                <form class="auth-form" id="signin-form">
+                    <div class="form-group">
+                        <label class="form-label" for="signin-email">Email Address</label>
+                        <input type="email" class="form-input" id="signin-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signin-password">Password</label>
+                        <input type="password" class="form-input" id="signin-password" name="password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign In</button>
+                    <div class="error-message" id="signin-error"></div>
+                    <div class="success-message" id="signin-success"></div>
+                </form>
+
+                <!-- Sign Up Form -->
+                <form class="auth-form" id="signup-form" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label" for="signup-fullname">Full Name</label>
+                        <input type="text" class="form-input" id="signup-fullname" name="full_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signup-username">Username</label>
+                        <input type="text" class="form-input" id="signup-username" name="user_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signup-email">Email Address</label>
+                        <input type="email" class="form-input" id="signup-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signup-password">Password</label>
+                        <input type="password" class="form-input" id="signup-password" name="pass_code" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                    <div class="error-message" id="signup-error"></div>
+                    <div class="success-message" id="signup-success"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <p>By continuing, you agree to our Terms of Service and Privacy Policy</p>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'signin';
+
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.form-tab');
+            const formContent = document.getElementById('form-content');
+            const signinForm = document.getElementById('signin-form');
+            const signupForm = document.getElementById('signup-form');
+
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Clear any previous messages
+            clearMessages();
+
+            if (tab === 'signin') {
+                signinForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                currentTab = 'signin';
+            } else {
+                signinForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                currentTab = 'signup';
+            }
+        }
+
+        function clearMessages() {
+            const messages = document.querySelectorAll('.error-message, .success-message');
+            messages.forEach(msg => {
+                msg.style.display = 'none';
+                msg.textContent = '';
+            });
+        }
+
+        function showMessage(type, message, formType) {
+            const messageEl = document.getElementById(`${formType}-${type}`);
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+        }
+
+        // Handle Sign In Form
+        document.getElementById('signin-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearMessages();
+
+            const formData = new FormData(this);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch('/auth/signin/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('success', 'Sign in successful! Redirecting...', 'signin');
+                    setTimeout(() => {
+                        window.location.href = '/tasks/';
+                    }, 1500);
+                } else {
+                    showMessage('error', result.error || 'Sign in failed. Please try again.', 'signin');
+                }
+            } catch (error) {
+                showMessage('error', 'Network error. Please try again.', 'signin');
+            }
+        });
+
+        // Handle Sign Up Form
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearMessages();
+
+            const formData = new FormData(this);
+            const data = {
+                full_name: formData.get('full_name'),
+                user_name: formData.get('user_name'),
+                email: formData.get('email'),
+                pass_code: formData.get('pass_code')
+            };
+
+            // Basic validation
+            if (data.email.length > 20) {
+                showMessage('error', 'Email must be 20 characters or less.', 'signup');
+                return;
+            }
+
+            if (data.user_name.length > 200) {
+                showMessage('error', 'Username must be 200 characters or less.', 'signup');
+                return;
+            }
+
+            if (data.full_name.length > 50) {
+                showMessage('error', 'Full name must be 50 characters or less.', 'signup');
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/signup/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('success', 'Account created successfully! You can now sign in.', 'signup');
+                    setTimeout(() => {
+                        switchTab('signin');
+                        document.getElementById('signin-email').value = data.email;
+                    }, 2000);
+                } else {
+                    showMessage('error', result.error || 'Account creation failed. Please try again.', 'signup');
+                }
+            } catch (error) {
+                showMessage('error', 'Network error. Please try again.', 'signup');
+            }
+        });
+
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Add smooth animations to form inputs
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -13,7 +13,6 @@ class attendees(models.Model):
     user_name = models.CharField(max_length=200)
     pass_code = models.TextField()
     full_name = models.CharField(max_length=50)
-    # gender = models.TextChoices("HE","SHE","PREFER NOT TO SAY")
 
 class organizers(models.Model):
     organisation = models.CharField(max_length=40)
